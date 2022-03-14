@@ -1,8 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-import store from "./store";
+// import store from "./store";
 const getToken = () => {
-  // return sessionStorage.getItem("token") || "";
-  return store.state.token
+  return sessionStorage.getItem("token") || "";
+  // return store.state.token
 
 };
 const ApiClient: AxiosInstance = axios.create({

@@ -1,6 +1,6 @@
 <template>
     <div class="books">
-        <van-nav-bar title="多账本" left-arrow fixed  placeholder="true"  @click-left="onClickLeft">
+        <van-nav-bar title="多账本" left-arrow  placeholder="true"  @click-left="onClickLeft">
         <template #right>
            <van-icon name="plus" size="18" @click="showAdd"/>
         </template>
@@ -14,7 +14,7 @@
          <div class="books-pic"  v-for="i in list" :key="i.name" >
             <!-- :style="{backgroundImage:'url('+ i.cover +')'}" -->
            <span>{{i.name}}</span>
-          <div class="b-p-circle" @click="goSetting(i.id)">
+          <div class="b-p-circle" @click="goSetting(i.id)" v-if="!i.isShare || !i.isDefault">
            ...
         </div>
        </div>
@@ -77,6 +77,9 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .books{
+    ::deep(.van-icon){
+
+    }
     h3{
         height: 62px;
         line-height: 62px;

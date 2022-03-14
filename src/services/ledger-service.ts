@@ -5,14 +5,17 @@ class LedgerService {
     userList(): Promise<ILedger[]> {
         return http.get("api/v1/money/users/ledgers");
     }
-    delete(data:number): Promise<void> {
+    delete(data:string): Promise<void> {
+        return http.delete("api/v1/money/users/ledgers/" + data);
+    }
+    add(data: ILedger): Promise<ILedger> {
+        return http.post("api/v1/money/users/ledgers", data);
+    }
+    update(data: ILedger): Promise<ILedger> {
+        return http.put("api/v1/money/users/ledgers", data);
+    }
+    getDetials(data:string): Promise<ILedger> {
         return http.get("api/v1/money/users/ledgers/" + data);
-    }
-    add(data: any): Promise<ILedger[]> {
-        return http.post("api/v1/money/users/ledgers" + data);
-    }
-    update(data: any): Promise<ILedger[]> {
-        return http.put("api/v1/money/users/ledgers" + data);
     }
 }
 export default new LedgerService();
