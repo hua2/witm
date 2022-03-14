@@ -60,7 +60,8 @@ export default defineComponent({
     //上传
     const afterRead = (file:any) => {
       CommonService.storage(file.file).then((rep)=>{
-        //  const fileName:strng = rep
+          let fileName:ILedger= reactive({});
+          fileName = rep
       })
       console.log('file',file)
     };
