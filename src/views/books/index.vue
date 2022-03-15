@@ -5,20 +5,21 @@
            <van-icon name="plus" size="18" @click="showAdd"/>
         </template>
         </van-nav-bar>
-        <van-popup v-model:show="show" round position="bottom" :style="{ height: '26%' }" >
+      <div class="content">
+        <div class="books-list" v-for="i in list" :key="i.name">
+           <div class="b-l-pic">
+            <span>{{i.name}}</span>
+           </div>
+            <div class="b-l-circle" @click="goSetting(i.id)" v-if="!i.isShare || !i.isDefault">
+                 ...
+            </div>
+        </div>
+      </div>
+         <van-popup v-model:show="show" round position="bottom" :style="{ height: '26%' }" >
             <h3>操作</h3>
             <van-cell title="新建账本" label="创建新账本，分类默认由系统提供" @click="addClick"/>
             <van-cell title="加入他人账本" label="通过邀请码加入他人账本一起记账" to="/books/join" />
         </van-popup>
-      <div class="content">
-         <div class="books-pic"  v-for="i in list" :key="i.name" >
-            <!-- :style="{backgroundImage:'url('+ i.cover +')'}" -->
-           <span>{{i.name}}</span>
-          <div class="b-p-circle" @click="goSetting(i.id)" v-if="!i.isShare || !i.isDefault">
-           ...
-        </div>
-       </div>
-      </div>
     </div>
 </template>
 
@@ -77,37 +78,34 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .books{
-    ::deep(.van-icon){
-
+    width: 100%;
+    .books-list{
+        color: #fff;
+        position: relative;
+        margin-bottom: 12px;
+        .b-l-pic{
+            height:128px;
+            line-height: 128px;
+            text-align: center;
+            font-size: 16px;
+            background-image: url("https://img.yzcdn.cn/vant/cat.jpeg");
+             background-size: 100% 100%;
+            border-radius: 8px;
+        }
+        .b-l-circle{
+            writing-mode:vertical-rl;
+            position: absolute;
+            top: 10px;
+            right: -4px;
+        }
     }
-    h3{
+       h3{
         height: 62px;
         line-height: 62px;
         font-size: 18px;
         font-weight: bold;
         padding-left: 16px;
         border-bottom: 1px solid #EFEFEF;
-    }
-    .books-pic{
-        width: 100%;
-        height: 128px;
-        line-height: 128px;
-        color:#FFF;
-        text-align: center;
-        border-radius: 8px;
-        background-image: url("https://img.yzcdn.cn/vant/cat.jpeg");
-        background-size: 100% 100%;
-        position: relative;
-        margin-bottom: 12px;
-        span{
-            font-size: 18px;
-        }
-        .b-p-circle{
-            writing-mode:vertical-rl;
-            position: absolute;
-            left: 80%;
-            top: 10px;
-        }
     }
 }
 

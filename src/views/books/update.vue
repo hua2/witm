@@ -45,7 +45,7 @@ import { defineComponent, ref, onMounted, reactive } from "vue";
 import { useRouter,useRoute } from "vue-router";
 import LedgerService from "@/services/ledger-service";
 import CommonService from "@/services/common-service";
-import { ILedger } from "@/types/ledger";
+import { ILedger, IUploader } from "@/types/ledger";
 import { Toast } from "vant";
 
 export default defineComponent({
@@ -60,8 +60,7 @@ export default defineComponent({
     //上传
     const afterRead = (file:any) => {
       CommonService.storage(file.file).then((rep)=>{
-          let fileName:ILedger= reactive({});
-          fileName = rep
+        console.log(rep)
       })
       console.log('file',file)
     };

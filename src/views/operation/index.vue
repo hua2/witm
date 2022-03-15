@@ -2,7 +2,7 @@
     <div class="operation">
         <van-tabs 
         v-model:active="active" 
-        swipeable 
+        sticky
         color="#519AF8"
         title-active-color="#519AF8"
         @click-tab="onClickTab" 
@@ -122,7 +122,7 @@ import { useRouter } from "vue-router";
     .icon{
         :deep(.van-icon){
             padding: 0 12px;
-            line-height: 44px;
+            top:6px
         }
     }
     .operation-top{
@@ -131,8 +131,9 @@ import { useRouter } from "vue-router";
          padding: 12px 0;
          text-align: center;
           p{
-            font-size: 14px;
+            font-size: 12px;
             text-align: center;
+            margin-top: 4px;
         }
         }
          :deep(.van-icon){

@@ -6,3 +6,6 @@ export interface ILedger {
     cover?: string, //封面图url
     startDate?: number //开始日期
 }
+export interface IUploader {
+    fileName:string,
+}
