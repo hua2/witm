@@ -9,5 +9,5 @@ export interface ILedger {
     startDate?: number //开始日期
 }
 export interface IUploader {
-    fileName:string,
+    fileName?:string,
 }

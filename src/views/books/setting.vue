@@ -24,9 +24,10 @@
       </div>
       <div class="b-s-common">
         <h5>账本共享用户列表</h5>
-        <p v-for="i in list" :key="i.nickName">
-          {{ i.nickName ? i.nickName : i.account }}
-        </p>
+        <div class="b-s-avatar" v-for="i in list" :key="i.nickName">
+          <img :src="'/api/v1/storage/' + i.avatar " alt="">
+         <p> {{ i.nickName ? i.nickName : i.account }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -90,16 +91,9 @@ export default defineComponent({
         });
     };
     //账本共享用户列表
-    //  LedgerService.getList(id.value?.toString() || "").then(
-    //     (rep: ILedger) => {
-    //       Object.assign(leader, rep);
-    //         console.log(leader);
-    //     }
-    //   );
     let list: ILedger[] = reactive([]);
     LedgerService.getList(id.value?.toString() || "").then((rep) => {
       list.push(...rep);
-      console.log("list", list);
     });
     const updateClick = () => {
       router.push({
@@ -116,6 +110,7 @@ export default defineComponent({
       updateClick,
       onCancel,
       router,
+      list
     };
   },
 });
@@ -136,6 +131,18 @@ export default defineComponent({
   }
   p {
     padding: 16px;
+  }
+  .b-s-avatar{
+    display: flex;
+    align-items: center;
+    padding: 4px 24px;
+    border-bottom: 1px dotted #EFEFEF;
+    img{
+      width: 32px;
+      height: 33px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
   }
 }
 </style>

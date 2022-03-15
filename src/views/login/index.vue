@@ -48,7 +48,7 @@
         const router = useRouter()
         const store = useStore()
         let isLogin: ILogin ={
-           account: 'admin',
+           account: 'admin2',
            password: '123456',
         }
         const authClick = () => { {

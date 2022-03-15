@@ -19,8 +19,8 @@
         placeholder="请输入备注"
       />
         <van-uploader :before-read="beforeRead" :after-read="afterRead">
-          <img v-if="!cover" src="https://img.yzcdn.cn/vant/tree.jpg" alt="" />
-          <img v-else :src="cover" alt="">
+          <img v-if="pic.fileName" :src="'/api/v1/storage/' + pic.fileName" alt="">
+          <img v-else src="https://img.yzcdn.cn/vant/tree.jpg" alt="" />
         </van-uploader>
       <div class="b-ntn">
         <van-button block type="primary" native-type="submit" :loading="isLoading" @click="onSubmit">
@@ -45,16 +45,14 @@ export default defineComponent({
     const isLoading =ref<boolean>(false)
     const router = useRouter();
     const route = useRoute();
-    console.log("update-获取到的参数", route.query.from, route.query.id);
     let from = ref(route.query.from);
     let id = ref(route.query.id);
     const onClickLeft = () => history.back();
     //上传
+    let pic: IUploader = reactive({});
     const afterRead = (file: any) => {
       CommonService.storage(file.file).then((rep) => {
-        let pic: IUploader = rep;
-        const cover:string ='https://witm.daminge.cf/' + pic.fileName
-        return cover
+         Object.assign(pic, rep);
       });
     };
     const beforeRead = (file: any) => {
@@ -65,7 +63,6 @@ export default defineComponent({
       }
       return true;
     };
-
     let leader: ILedger = reactive({});
     //获取详情
     if (id.value) {
@@ -85,9 +82,9 @@ export default defineComponent({
       method({
         ...leader,
         id: id.value?.toString() || "",
+        cover: pic.fileName,
       }).then(() => {
         isLoading.value = false
-        // console.log(rep);
         Toast(id.value?'修改成功':'新建成功')
         router.push("/books");
       });
@@ -99,7 +96,8 @@ export default defineComponent({
       onSubmit,
       from,
       leader,
-      isLoading
+      isLoading,
+      pic
     };
   },
 });
