@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted} from 'vue';
+import { defineComponent, ref, reactive} from 'vue';
 import { useRouter } from 'vue-router';
 import LedgerService from "@/services/ledger-service";
 import { ILedger } from '@/types/ledger';
@@ -56,12 +56,9 @@ export default defineComponent({
             });
         }
       let list: ILedger[] = reactive([]);
-      const listClick = () => {
       LedgerService.userList().then((rep) => {
         list.push(...rep);
       });
-      };
-        onMounted(listClick)
         return{
         onClickLeft,
         goSetting,
@@ -69,7 +66,6 @@ export default defineComponent({
         showAdd,
         addClick,
         list,
-        listClick,
         }
     }
 })

@@ -19,22 +19,30 @@
       </div>
       <div class="b-s-common">
         <h5>账本成员</h5>
-        <p>邀请成员</p>
+        <p @click="router.push('/books/join')">加入他人账本</p>
+        <p @click="onCancel">取消共享</p>
+      </div>
+      <div class="b-s-common">
+        <h5>账本共享用户列表</h5>
+        <p v-for="i in list" :key="i.nickName">
+          {{ i.nickName ? i.nickName : i.account }}
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import { Dialog } from "vant";
+import { defineComponent, reactive, ref } from "vue";
+import { Dialog, Toast } from "vant";
 import LedgerService from "@/services/ledger-service";
-import { useRouter,useRoute } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
+import { ILedger } from "@/types/ledger";
 
 export default defineComponent({
   name: "Books-Setting",
   setup() {
-     const router = useRouter();
+    const router = useRouter();
     const route = useRoute();
     console.log("获取到的参数", route.query.id);
     let id = ref(route.query.id);
@@ -45,27 +53,69 @@ export default defineComponent({
         message: "确认删除此账单？",
       })
         .then(() => {
-          LedgerService.delete(id.value?.toString() || '').then(()=>{
-            router.push('/books')
+          LedgerService.delete(id.value?.toString() || "").then(() => {
+            router.push("/books");
           });
         })
         .catch((err) => {
           console.log(err);
         });
     };
-     const updateClick = () =>{
-          router.push({
-          path: '/books/update',
-          query: {
-              id: id.value,
-          },
+    //获取详情
+    let leader: ILedger = reactive({});
+    if (id.value) {
+      LedgerService.getDetials(id.value?.toString() || "").then(
+        (rep: ILedger) => {
+          Object.assign(leader, rep);
+          console.log(leader);
+        }
+      );
+    }
+    //取消分享账本
+    const onCancel = () => {
+      Dialog.confirm({
+        message: "取消共享账本吗？",
+      })
+        .then(() => {
+          LedgerService.cancel(
+            leader.id?.toString() || "",
+            leader.userId?.toString() || ""
+          ).then(() => {
+            Toast("取消成功");
+            router.push("/books");
           });
-      }
+        })
+        .catch(() => {
+          // on cancel
+        });
+    };
+    //账本共享用户列表
+    //  LedgerService.getList(id.value?.toString() || "").then(
+    //     (rep: ILedger) => {
+    //       Object.assign(leader, rep);
+    //         console.log(leader);
+    //     }
+    //   );
+    let list: ILedger[] = reactive([]);
+    LedgerService.getList(id.value?.toString() || "").then((rep) => {
+      list.push(...rep);
+      console.log("list", list);
+    });
+    const updateClick = () => {
+      router.push({
+        path: "/books/update",
+        query: {
+          id: id.value,
+        },
+      });
+    };
 
     return {
       goBack,
       deleteClick,
-      updateClick
+      updateClick,
+      onCancel,
+      router,
     };
   },
 });

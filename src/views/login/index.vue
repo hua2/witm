@@ -25,7 +25,7 @@
             />
         </van-cell-group>
         <div style="margin: 24px;">
-            <van-button square block type="primary" native-type="submit" @click="authClick">
+            <van-button square block type="primary" native-type="submit" :loading="isLoading" @click="authClick">
             开始登录
          </van-button>
         </div>
@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-  import {defineComponent } from 'vue'
+  import {defineComponent, ref } from 'vue'
   import { useRouter } from 'vue-router';
   import { useStore } from 'vuex'
   import AuthService from "@/services/auth-service";
@@ -44,6 +44,7 @@
   export default defineComponent({
     name:'Witm-Login',
      setup() {
+       const isLoading =ref<boolean>(false)
         const router = useRouter()
         const store = useStore()
         let isLogin: ILogin ={
@@ -51,7 +52,9 @@
            password: '123456',
         }
         const authClick = () => { {
+          isLoading.value = true
         AuthService.authenticate(isLogin).then((rep) => {
+           isLoading.value = false
            const { id_token } = rep;
             if (id_token) {
               sessionStorage.setItem("token", id_token);
@@ -62,11 +65,11 @@
           });
         }
       }
-
       return {
         authClick,
         isLogin,
-        router
+        router,
+        isLoading
       };
   }, 
  })
