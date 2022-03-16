@@ -1,96 +1,99 @@
 <template>
-    <div class="login">
-        <div class="login-back" @click="router.back()">
-          <van-icon name="cross" size="18"/>
-          <span>登录</span>
-        </div>
-        <p>嗨</p>
-        <p>欢迎使用钱呢</p>
-       <van-form>
-        <van-cell-group inset>
-            <van-field
-            v-model="isLogin.account"
-            name="account"
-            label="账号"
-            placeholder="账号"
-            :rules="[{ required: true, message: '账号' }]"
-            />
-            <van-field
-            v-model="isLogin.password"
-            type="password"
-            name="password"
-            label="密码"
-            placeholder="密码"
-            :rules="[{ required: true, message: '请填写密码' }]"
-            />
-        </van-cell-group>
-        <div style="margin: 24px;">
-            <van-button square block type="primary" native-type="submit" :loading="isLoading" @click="authClick">
-            开始登录
-         </van-button>
-        </div>
-</van-form>
+  <div class="login">
+    <div class="login-back" @click="router.back()">
+      <van-icon name="cross" size="18" />
+      <span>登录</span>
     </div>
+    <p>嗨</p>
+    <p>欢迎使用钱呢</p>
+    <van-form show-error :show-error-message="false" @submit="onSubmit">
+      <van-cell-group inset>
+        <van-field
+          v-model="account"
+          name="account"
+          label="账号"
+          placeholder="账号"
+          :rules="[{ required: true, message: '请填写账号' }]"
+        />
+        <van-field
+          v-model="password"
+          type="password"
+          name="password"
+          label="密码"
+          placeholder="密码"
+          :rules="[{ required: true, message: '请填写密码' }]"
+        />
+      </van-cell-group>
+      <div style="margin: 24px">
+        <van-button
+          round
+          block
+          type="primary"
+          native-type="submit"
+          :loading="isLoading"
+        >
+          登录
+        </van-button>
+      </div>
+    </van-form>
+  </div>
 </template>
 
 <script lang="ts">
-  import {defineComponent, ref } from 'vue'
-  import { useRouter } from 'vue-router';
-  import { useStore } from 'vuex'
-  import AuthService from "@/services/auth-service";
-  import { ILogin } from '@/types/auth';
+import { defineComponent, ref } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import AuthService from "@/services/auth-service";
+import { ILogin } from "@/types/auth";
 
+export default defineComponent({
+  name: "Witm-Login",
+  setup() {
+    const isLoading = ref<boolean>(false);
+    const router = useRouter();
+    const store = useStore();
+    const account = ref("");
+    const password = ref("");
 
-  export default defineComponent({
-    name:'Witm-Login',
-     setup() {
-       const isLoading =ref<boolean>(false)
-        const router = useRouter()
-        const store = useStore()
-        let isLogin: ILogin ={
-           account: 'admin2',
-           password: '123456',
+    const onSubmit = (values: ILogin) => {
+      isLoading.value = true;
+      AuthService.authenticate(values).then((rep) => {
+        isLoading.value = false;
+        const { id_token } = rep;
+        if (id_token) {
+          sessionStorage.setItem("token", id_token);
+          store.commit("setToken", id_token);
+          store.dispatch("getInfo");
+          router.push("/ho me");
         }
-        const authClick = () => { {
-          isLoading.value = true
-        AuthService.authenticate(isLogin).then((rep) => {
-           isLoading.value = false
-           const { id_token } = rep;
-            if (id_token) {
-              sessionStorage.setItem("token", id_token);
-              store.commit('setToken', id_token);
-              store.dispatch('getInfo')
-              router.push('/')
-            }
-          });
-        }
-      }
-      return {
-        authClick,
-        isLogin,
-        router,
-        isLoading
-      };
-  }, 
- })
+      });
+    };
+    return {
+      onSubmit,
+      account,
+      password,
+      router,
+      isLoading,
+    };
+  },
+});
 </script>
 
 <style scoped lang="scss">
-.login{
-  .login-back{
+.login {
+  .login-back {
     margin-left: 12px;
     padding-bottom: 120px;
-    span{
+    span {
       font-size: 16px;
       margin-left: 16px;
     }
   }
-  p{
+  p {
     font-size: 24px;
     font-weight: bold;
     padding-left: 18px;
     margin-bottom: 16px;
   }
 }
-
 </style>

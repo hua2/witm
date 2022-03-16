@@ -1,7 +1,7 @@
 /**用户登录 */
 export interface ILogin {
-    account: string;
-    password: string;
+    account?: string;
+    password?: string;
 }
 
 /**当前登录用户 */
