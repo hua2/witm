@@ -3,12 +3,8 @@ import { UserState } from "./types";
 import AuthService from "@/services/auth-service";
 
 export const useUserStore = defineStore("user", {
-    state: (): UserState => ({
-        account: undefined,
-        avatar: undefined,
-        id: undefined,
-        ledgerId: undefined,
-        nickName: undefined
+    state: () => ({
+        userINfo: {},
       }),
 getters: {
     // getInfo(state: UserState): UserState {
@@ -17,8 +13,10 @@ getters: {
   },
 actions: {
     getUserInfo(){
-        AuthService.account().then((rep) =>{
+        AuthService.account().then((rep:UserState) =>{
             console.log('getUserInfo-rep',rep)
+            this.userINfo = rep
+            console.log(' this.userINfo', this.userINfo)
         })
     }
  }

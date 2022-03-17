@@ -82,10 +82,11 @@ const onSubmit = () => {
     id: id.value?.toString() || "",
     cover: pic.fileName,
   }).then(() => {
-    isLoading.value = false
     Toast(id.value?'修改成功':'新建成功')
     router.push("/books");
-  });
+  }).finally(()=>{
+    isLoading.value = false
+  })
 };
 </script>
 

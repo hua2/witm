@@ -14,8 +14,8 @@
       <div class="books-list" v-for="i in list" :key="i.name">
         <div
           class="b-l-pic"
-            :style="{
-                  backgroundImage: 'url(' + '/api/v1/storage/' + i.cover + ')'
+          :style="{
+            backgroundImage: 'url(' + '/api/v1/storage/' + i.cover + ')',
           }"
         >
           <span>{{ i.name }}</span>
@@ -62,7 +62,7 @@ const goSetting = (id: number) => {
     path: "/books/setting",
     query: {
       id: id,
-      },
+    },
   });
 };
 const show = ref<boolean>(false);
@@ -70,16 +70,16 @@ const showAdd = () => {
   show.value = true;
 };
 const addClick = () => {
-    router.push({
-      path: "/books/update",
-      query: {
-        from: "add",
-      },
-    });
-  };
+  router.push({
+    path: "/books/update",
+    query: {
+      from: "add",
+    },
+  });
+};
 let list: ILedger[] = reactive([]);
 LedgerService.userList().then((rep) => {
-list.push(...rep);
+  list.push(...rep);
 });
 </script>
 
@@ -95,7 +95,6 @@ list.push(...rep);
       line-height: 128px;
       text-align: center;
       font-size: 16px;
-      // background-image: url("https://img.yzcdn.cn/vant/cat.jpeg");
       background-size: 100% 100%;
       border-radius: 8px;
     }

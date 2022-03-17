@@ -1,6 +1,6 @@
 <template>
     <div class="classify">
-        <van-nav-bar :title="info.id?'修改分类':'添加分类'" left-arrow fixed placeholder="true" @click-left="onClickLeft">
+        <van-nav-bar :title="info.id?'修改分类':'添加分类'" left-arrow fixed :placeholder="true" @click-left="onClickLeft">
         <!-- <template #right>
         <van-icon name="success" />
         </template> -->
@@ -55,7 +55,7 @@ import { Toast } from 'vant';
 import { IClassify } from "@/types/classify";
 import ClassifyService from "@/services/classify-service";
 import CommonService from "@/services/common-service";
-import IIcon from "@/services/common-service";
+import { IIcon } from "@/types/common";
 
 const onClickLeft = () => history.back();
 const router = useRouter();
@@ -72,13 +72,13 @@ CommonService.iconList().then((rep) => {
 
 const showPicker = ref(false);
 const columns = ['支出', '收入', ];
-const onConfirm = (value) => {
+const onConfirm = (value:string) => {
   info.type = value;
   showPicker.value = false;
 };
 
 //选择图标
-const iconClick =(i,name)=>{
+const iconClick =(i:number,name:string)=>{
   console.log('i',i)
   console.log('name',name)
   isActive.value = i;
@@ -106,7 +106,7 @@ const onSubmit = () => {
    Toast('请选择图标！')
    return
   }
-  // isLoading.value = true
+  isLoading.value = true
   let method = ClassifyService.add;
   if (info.id) {
     method = ClassifyService.update;
@@ -115,10 +115,11 @@ const onSubmit = () => {
     ...info,
     type:info.type=='支出'?'OUTLAY':'INCOME',
   }).then(() => {
-    // isLoading.value = false
     Toast(info.id?'修改成功':'新建成功')
     router.push("/operation");
-  });
+  }).finally(()=>{
+    isLoading.value = false
+  })
 };
 
 </script>

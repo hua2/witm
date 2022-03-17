@@ -74,6 +74,7 @@ const getList = () => {
 });
 }
 const onClickTab = (v) => {
+    list.splice(0)
      if(v.name === 0){
          type.value = 'OUTLAY'
      }else{
@@ -112,6 +113,7 @@ const delClick =(id) =>{
      ClassifyService.delete(id).then(() => {
       Toast('删除成功')
        show.value =false;
+       list.splice(0)
        getList()
       });
     })

@@ -2,7 +2,7 @@
 import http from "@/http-common";
 import { IClassify } from "@/types/classify";
 class ClassifyService {
-    list(params:string): Promise<void> {
+    list(params:any): Promise<IClassify[]> {
         return http.get("api/v1/money/users/classifies", {params:params});
     }
     add(data: IClassify): Promise<IClassify> {

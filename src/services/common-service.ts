@@ -1,10 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import http from "@/http-common";
-export interface IIcon {
-  id?:string,
-  name?:string,
-  icon?:string
-}
+import { IIcon } from "@/types/common";
 
 //上传系统文件
 class CommonService {
