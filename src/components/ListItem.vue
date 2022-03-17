@@ -38,39 +38,28 @@
   </div>
 </template>
 
-<script lang="ts">
-import {defineComponent,ref} from 'vue'
+<script setup lang="ts">
+import {ref} from 'vue'
 import { useRouter } from "vue-router";
 import { Dialog } from 'vant';
-
-export default defineComponent({
-  setup() {
-    const router = useRouter();
-    const show = ref<boolean>(false);
-    const showPopup = () => {
-      show.value = true;
-    };
-    const onDelete =() =>{
-      Dialog.confirm({
-        title: '提示',
-        message:
-            '确认要删除此账单吗？',
-      })
-          .then(() =>{
-            console.log()
-          })
-          .catch((err) => {
-            console.log(err)
-          });
-    }
-    return {
-      show,
-      showPopup,
-      router,
-      onDelete
-    };
-  },
-})
+const router = useRouter();
+const show = ref<boolean>(false);
+const showPopup = () => {
+  show.value = true;
+};
+const onDelete =() =>{
+  Dialog.confirm({
+    title: '提示',
+    message:
+        '确认要删除此账单吗？',
+  })
+    .then(() =>{
+      console.log()
+    })
+    .catch((err) => {
+      console.log(err)
+    });
+}
 </script>
 
 <style scoped lang="scss">

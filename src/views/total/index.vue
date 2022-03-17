@@ -30,33 +30,19 @@
        <Footer/>
   </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import { ref } from 'vue';
 import Footer from '@/components/Footer.vue'
 
-export default defineComponent({
-  name:"Witm-total",
-  components:{Footer},
-    setup() {
-    const onClickLeft = () => history.back();
-    const date = ref<string>('');
-    const show = ref<boolean>(false);
-
-    const formatDate = (date:Date) => `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-    const onConfirm = (values:any) => {
-      const [start, end] = values;
-      show.value = false;
-      date.value = `${formatDate(start)} - ${formatDate(end)}`;
-    };
-    return {
-      onClickLeft,
-     date,
-      show,
-      onConfirm,
-    };
-    },
-})
+const onClickLeft = () => history.back();
+const date = ref<string>('');
+const show = ref<boolean>(false);
+const formatDate = (date:Date) => `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+const onConfirm = (values:any) => {
+const [start, end] = values;
+  show.value = false;
+  date.value = `${formatDate(start)} - ${formatDate(end)}`;
+};
 </script>
 <style scoped lang="scss">
 .overview{

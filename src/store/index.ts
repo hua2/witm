@@ -1,32 +1,25 @@
-import { createStore } from 'vuex';
-
-import RootStateTypes from '@/store/interface';
+import { defineStore } from "pinia";
+import { UserState } from "./types";
 import AuthService from "@/services/auth-service";
 
-export default createStore<RootStateTypes>({
-    state: {
-        token:'',
-        account: {}
-    },
-    getters :{
-    },
-    mutations: {
-        setToken(state,data){
-            console.log('setToken ', data);
-            state.token = data;
-        },
-        setAccount: (state, data:any) => {
-            console.log('setAccount-mutations', data);
-            state.account = data
-        },
-    },
-    actions: {
-        getInfo (context): void {
-            AuthService.account().then((rep) => {
-                context.commit("setAccount", rep);
-            });
-        }
-    },
-    modules: {
+export const useUserStore = defineStore("user", {
+    state: (): UserState => ({
+        account: undefined,
+        avatar: undefined,
+        id: undefined,
+        ledgerId: undefined,
+        nickName: undefined
+      }),
+getters: {
+    // getInfo(state: UserState): UserState {
+    //     return { ...state };
+    //   },
+  },
+actions: {
+    getUserInfo(){
+        AuthService.account().then((rep) =>{
+            console.log('getUserInfo-rep',rep)
+        })
     }
+ }
 });

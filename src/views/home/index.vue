@@ -1,7 +1,26 @@
 <template>
   <div class="home">
     <!-- 首页header -->
-    <Header/>
+     <div class="home-header">
+    <van-icon name="wap-nav" size="24"/>
+    <div>
+      <van-cell :value=date?date:currentDate @click="showCalendar = true" is-link arrow-direction="down" />
+      <van-popup v-model:show="showCalendar" round
+                 position="bottom"
+                 :style="{ height: '38%' }">
+        <van-datetime-picker
+            v-model="currentDate"
+            type="year-month"
+            title="选择年月"
+            :min-date="minDate"
+            :max-date="maxDate"
+            @cancel="showCalendar = false"
+            @confirm="onConfirm"
+        />
+      </van-popup>
+    </div>
+  <router-link to="/total"><img :src="require('@/assets/img/overview.png')" width="22"/></router-link>
+  </div>
     <div class="content">
       <div class="home-total">
         <div class="h-t-top">
@@ -18,82 +37,48 @@
       <list-item/>
       <list-item/>
     </div>
-    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-      <van-list
-          v-model:loading="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          @load="onLoad"
-      >
-        <!-- <van-cell v-for="item in list" :key="item" :title="item" /> -->
-      </van-list>
-    </van-pull-refresh>
     <Footer/>
-
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
-import Header from '@/components/Header.vue'
+<script setup lang="ts">
+import { ref } from 'vue';
 import ListItem from '@/components/ListItem.vue';
 import { useRouter } from 'vue-router';
 import Footer from '@/components/Footer.vue'
-
-export default defineComponent({
-  name: 'Witm-Home',
-  components:{Header, ListItem, Footer},
-  setup() {
-    const router = useRouter();
-    const list = ref<number[]>([]);
-    const loading = ref<boolean>(false);
-    const finished = ref<boolean>(false);
-    const refreshing = ref<boolean>(false);
-
-    const onLoad = () => {
-      setTimeout(() => {
-        if (refreshing.value) {
-          list.value = [];
-          refreshing.value = false;
-        }
-
-        for (let i = 0; i < 10; i++) {
-          list.value.push(list.value.length + 1);
-        }
-        loading.value = false;
-
-        if (list.value.length >= 40) {
-          finished.value = true;
-        }
-      }, 1000);
-    };
+// import BillService from "@/services/bill-service";
 
 
-    const onRefresh = () => {
-      // 清空列表数据
-      finished.value = false;
+//显示当前时间
+const showCalendar = ref(false);
+const time = ref(new Date());
+const currentDate = `${time.value.getFullYear()}-${time.value.getMonth() + 1}`;
+const date = ref<string>('');
+const onConfirm = (value:any) => {
+const formatDate = (date: Date) => `${date.getFullYear()}-${date.getMonth() + 1}`;
+  showCalendar.value = false;
+  date.value = formatDate(value);
+};
 
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
-      loading.value = true;
-      onLoad();
-    };
 
-    return {
-      list,
-      onLoad,
-      loading,
-      finished,
-      onRefresh,
-      refreshing,
-      router
-    };
-  },
-});
+const router = useRouter();
+
+// BillService.billList().then()
+
 </script>
+
 <style scoped lang="scss" >
 .home{
   width: 100%;
+  .home-header{
+  width: calc(100% - 32px);
+  height: 48px;
+  padding: 0 16px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
   .home-total{
     padding: 12px;
     height: 108px;

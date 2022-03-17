@@ -12,16 +12,16 @@
           v-model="account"
           name="account"
           label="账号"
-          placeholder="账号"
-          :rules="[{ required: true, message: '请填写账号' }]"
+          placeholder="请填写账号"
+          :rules="[{ required: true }]"
         />
         <van-field
           v-model="password"
           type="password"
           name="password"
           label="密码"
-          placeholder="密码"
-          :rules="[{ required: true, message: '请填写密码' }]"
+          placeholder="请填写密码"
+          :rules="[{ required: true}]"
         />
       </van-cell-group>
       <div style="margin: 24px">
@@ -39,44 +39,31 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from "vue";
+<script setup lang="ts">
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+import { useUserStore } from '@/store/index'
 import AuthService from "@/services/auth-service";
 import { ILogin } from "@/types/auth";
 
-export default defineComponent({
-  name: "Witm-Login",
-  setup() {
-    const isLoading = ref<boolean>(false);
-    const router = useRouter();
-    const store = useStore();
-    const account = ref("");
-    const password = ref("");
+const isLoading = ref<boolean>(false);
+const router = useRouter();
+const userStore = useUserStore()
+const account = ref("");
+const password = ref("");
 
-    const onSubmit = (values: ILogin) => {
-      isLoading.value = true;
-      AuthService.authenticate(values).then((rep) => {
-        isLoading.value = false;
-        const { id_token } = rep;
-        if (id_token) {
-          sessionStorage.setItem("token", id_token);
-          store.commit("setToken", id_token);
-          store.dispatch("getInfo");
-          router.push("/ho me");
-        }
-      });
-    };
-    return {
-      onSubmit,
-      account,
-      password,
-      router,
-      isLoading,
-    };
-  },
-});
+const onSubmit = (values: ILogin) => {
+    isLoading.value = true;
+    AuthService.authenticate(values).then((rep) => {
+      isLoading.value = false;
+      const { id_token } = rep;
+      if (id_token) {
+        sessionStorage.setItem("token", id_token);
+        userStore.getUserInfo();
+        router.push("/home");
+      }
+    });
+};
 </script>
 
 <style scoped lang="scss">

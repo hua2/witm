@@ -27,9 +27,9 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import(/* webpackChunkName: "setting" */ '../views/books/setting.vue'),
     },
     {
-        path: '/books/update',
+        path: '/books/edit',
         name: 'update',
-        component: () => import(/* webpackChunkName: "update" */ '../views/books/update.vue'),
+        component: () => import(/* webpackChunkName: "edit" */ '../views/books/edit.vue'),
     },
     {
         path: '/books/join',
@@ -42,14 +42,14 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import(/* webpackChunkName: "operation" */ '../views/operation/index.vue'),
     },
     {
-        path: '/operation/add',
-        name: 'add',
-        component: () => import(/* webpackChunkName: "add" */ '../views/operation/add.vue'),
+        path: '/operation/list',
+        name: 'list',
+        component: () => import(/* webpackChunkName: "list" */ '../views/operation/list.vue'),
     },
     {
-        path: '/operation/classify',
-        name: 'classify',
-        component: () => import(/* webpackChunkName: "classify" */ '../views/operation/classify.vue'),
+        path: '/operation/edit',
+        name: 'edit',
+        component: () => import(/* webpackChunkName: "classify" */ '../views/operation/edit.vue'),
     }
 ]
 

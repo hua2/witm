@@ -40,39 +40,26 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from "vue";
+<script setup lang="ts">
+import { ref } from "vue";
 import LedgerService from "@/services/ledger-service";
 import { Toast } from "vant";
 import router from "@/router";
 
-export default defineComponent({
-  name: "Books-Join",
-  setup() {
-    const isLoading =ref<boolean>(false)
-    const onClickLeft = () => history.back();
-    const value = ref<number>(0);
-    const show = ref<boolean>(false);
-    const onSubmit = () => {
-      isLoading.value = true
-      LedgerService.share(value.value).then(() => {
-        isLoading.value = false
-        Toast("邀请已发送，请等待...");
-        setTimeout(() => {
-          router.push("/books");
-        }, 1000);
-      });
-    };
-
-    return {
-      onClickLeft,
-      value,
-      show,
-      onSubmit,
-      isLoading
-    };
-  },
-});
+const isLoading =ref<boolean>(false)
+const onClickLeft = () => history.back();
+const value = ref<number>(0);
+const show = ref<boolean>(false);
+const onSubmit = () => {
+  isLoading.value = true
+  LedgerService.share(value.value).then(() => {
+  isLoading.value = false
+  Toast("邀请已发送，请等待...");
+  setTimeout(() => {
+    router.push("/books");
+   }, 1000);
+ });
+};
 </script>
 
 <style scoped lang="scss">

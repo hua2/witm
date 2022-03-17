@@ -50,51 +50,36 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, reactive } from "vue";
+<script setup lang="ts">
+import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import LedgerService from "@/services/ledger-service";
 import { ILedger } from "@/types/ledger";
-
-export default defineComponent({
-  name: "Witm-Books",
-  setup() {
-    const router = useRouter();
-    const onClickLeft = () => history.back();
-    const goSetting = (id: number) => {
-      console.log("id", id);
-      router.push({
-        path: "/books/setting",
-        query: {
-          id: id,
-        },
-      });
-    };
-    const show = ref<boolean>(false);
-    const showAdd = () => {
-      show.value = true;
-    };
-    const addClick = () => {
-      router.push({
-        path: "/books/update",
-        query: {
-          from: "add",
-        },
-      });
-    };
-    let list: ILedger[] = reactive([]);
-    LedgerService.userList().then((rep) => {
-      list.push(...rep);
+const router = useRouter();
+const onClickLeft = () => history.back();
+const goSetting = (id: number) => {
+  router.push({
+    path: "/books/setting",
+    query: {
+      id: id,
+      },
+  });
+};
+const show = ref<boolean>(false);
+const showAdd = () => {
+  show.value = true;
+};
+const addClick = () => {
+    router.push({
+      path: "/books/update",
+      query: {
+        from: "add",
+      },
     });
-    return {
-      onClickLeft,
-      goSetting,
-      show,
-      showAdd,
-      addClick,
-      list,
-    };
-  },
+  };
+let list: ILedger[] = reactive([]);
+LedgerService.userList().then((rep) => {
+list.push(...rep);
 });
 </script>
 

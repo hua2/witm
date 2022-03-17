@@ -14,67 +14,23 @@
          </template>  
         <template #nav-right>
             <div class="icon">
-            <van-icon name="plus" size="18" @click="router.push('/operation/add')"/>
+            <van-icon name="plus" size="18" @click="router.push('/operation/list')"/>
             </div>
         </template>
         <van-tab title="支出">
             <van-row class="operation-top" >
-                 <van-col span="4" @click="colClick">
-                    <van-icon name="like-o"/>
-                    <p>图片</p>
-                </van-col>
-                 <van-col span="4" @click="colClick">
-                    <van-icon name="like-o"/>
-                    <p>图片</p>
-                </van-col>
-                 <van-col span="4" @click="colClick">
-                    <van-icon name="like-o"/>
-                    <p>图片</p>
-                </van-col>
-                 <van-col span="4" @click="colClick">
-                    <van-icon name="like-o"/>
-                    <p>图片</p>
-                </van-col>
-                 <van-col span="4" @click="colClick">
-                    <van-icon name="like-o"/>
-                    <p>图片</p>
-                </van-col>
-                <van-col span="4">
-                    <van-icon name="like-o" />
-                    <p>图片</p>
-                </van-col>
-                <van-col span="4">
-                    <van-icon name="like-o"/>
-                    <p>图片</p>
-                </van-col>
-                <van-col span="4">
-                    <van-icon name="like-o"/>
-                    <p>图片</p>
-                </van-col>
-                <van-col span="4">
-                    <van-icon name="like-o"/>
-                    <p>图片</p>
-                </van-col>
-                <van-col span="4">
-                    <van-icon name="like-o"/>
-                    <p>图片</p>
-                </van-col>
-                <van-col span="4">
-                  <van-icon name="like-o"/>
-                    <p>图片</p>
-                </van-col>
-                <van-col span="4">
-                   <van-icon name="like-o"/>
-                   <p>图片</p>
+                 <van-col span="4"  v-for="i in list" :key="i.name" >
+                     <span v-html="i.icon"/>       
+                    <p>{{i.name}}</p>
                 </van-col>
             </van-row>
             <Counter/>
         </van-tab>
         <van-tab title="收入">
             <van-row class="operation-top" >
-            <van-col span="4">
-                <van-icon name="like-o"/>
-                <p>收入</p>
+            <van-col span="4" v-for="i in list" :key="i.name">
+                <span v-html="i.icon"/>       
+                <p>{{i.name}}</p>
                 </van-col>
             </van-row>
              <Counter/>
@@ -83,30 +39,36 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import Counter from "@/components/Counter.vue";
-import { defineComponent,ref } from "vue";
+import { ref,reactive,onMounted } from "vue";
 import { useRouter } from "vue-router";
-  export default defineComponent({
-    name:"Witm-Operation",
-    components:{Counter},
-    setup(){
-        const router = useRouter();
-        const active = ref(0);
-        const colClick = (e:any)=>{
-            console.log('e-111',e)
-        }
-        const onClickTab = () => {
-          //
-        }
-        return{
-            active,
-            router,
-            colClick,
-            onClickTab
-        }
-    }
-})
+import ClassifyService from "@/services/classify-service";
+import { IClassify } from "@/types/classify";
+
+const router = useRouter();
+const active = ref(0);
+const type = ref('OUTLAY');
+  onMounted(() => {
+   getList()
+  });
+
+let list: IClassify[] = reactive([]);
+const getList = () => {
+    ClassifyService.list({
+        type:type.value.toString() || ""
+    }).then((rep) => {
+     Object.assign(list, rep);
+});
+}
+const onClickTab = (v) => {
+     if(v.name === 0){
+         type.value = 'OUTLAY'
+     }else{
+         type.value = 'INCOME'
+     }
+     getList()
+}
 </script>
 
 <style scoped lang="scss">
@@ -135,10 +97,10 @@ import { useRouter } from "vue-router";
             text-align: center;
             margin-top: 4px;
         }
+        svg{
+        width: 50%;
+         }
         }
-         :deep(.van-icon){
-          font-size: 24px;
-       }
     }
 }
 

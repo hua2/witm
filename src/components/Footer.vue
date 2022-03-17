@@ -10,20 +10,10 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
+<script setup lang="ts">
+import { ref } from 'vue';
+const active = ref(0);
 
-export default defineComponent({
-  name: 'Witm-Footer',
-  setup() {
-    const active = ref(0);
-    return {
-      active,
-    };
-  },
-  props: {
-  },
-});
 </script>
 
 <style scoped lang="scss">

@@ -1,7 +1,8 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from './router'
-import store from './store';
+// import store from './store';
+import { createPinia } from "pinia";
 
 
 // 引入全局样式
@@ -13,4 +14,4 @@ import 'amfe-flexible'
 // 全局引入按需引入UI库 vant
 import { vantPlugins } from './plugins/vant'
 
-createApp(App).use(vantPlugins).use(router).use(store).mount('#app')
+createApp(App).use(vantPlugins).use(router).use(createPinia()).mount('#app')

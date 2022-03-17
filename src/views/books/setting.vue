@@ -19,101 +19,84 @@
       </div>
       <div class="b-s-common">
         <h5>账本成员</h5>
-        <p @click="router.push('/books/join')">加入他人账本</p>
-        <p @click="onCancel">取消共享</p>
-      </div>
-      <div class="b-s-common">
-        <h5>账本共享用户列表</h5>
-        <div class="b-s-avatar" v-for="i in list" :key="i.nickName">
+         <div class="b-s-avatar" v-for="i in list" :key="i.nickName">
           <img :src="'/api/v1/storage/' + i.avatar " alt="">
          <p> {{ i.nickName ? i.nickName : i.account }}</p>
+         <div class="b-s-btn" @click="delClick(i.id)">  
+           <img :src="require('@/assets/img/del.png')"></div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, ref } from "vue";
+<script setup lang="ts">
+import { reactive, ref } from "vue";
 import { Dialog, Toast } from "vant";
 import LedgerService from "@/services/ledger-service";
 import { useRouter, useRoute } from "vue-router";
 import { ILedger } from "@/types/ledger";
 
-export default defineComponent({
-  name: "Books-Setting",
-  setup() {
-    const router = useRouter();
-    const route = useRoute();
-    console.log("获取到的参数", route.query.id);
-    let id = ref(route.query.id);
-    const goBack = () => history.back();
-    const deleteClick = () => {
-      Dialog.confirm({
-        title: "删除账单",
-        message: "确认删除此账单？",
-      })
-        .then(() => {
-          LedgerService.delete(id.value?.toString() || "").then(() => {
-            router.push("/books");
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-    //获取详情
-    let leader: ILedger = reactive({});
-    if (id.value) {
-      LedgerService.getDetials(id.value?.toString() || "").then(
-        (rep: ILedger) => {
-          Object.assign(leader, rep);
-          console.log(leader);
-        }
-      );
-    }
-    //取消分享账本
-    const onCancel = () => {
-      Dialog.confirm({
-        message: "取消共享账本吗？",
-      })
-        .then(() => {
-          LedgerService.cancel(
-            leader.id?.toString() || "",
-            leader.userId?.toString() || ""
-          ).then(() => {
-            Toast("取消成功");
-            router.push("/books");
-          });
-        })
-        .catch(() => {
-          // on cancel
-        });
-    };
-    //账本共享用户列表
-    let list: ILedger[] = reactive([]);
-    LedgerService.getList(id.value?.toString() || "").then((rep) => {
-      list.push(...rep);
-    });
-    const updateClick = () => {
-      router.push({
-        path: "/books/update",
-        query: {
-          id: id.value,
-        },
+const router = useRouter();
+const route = useRoute();
+console.log("获取到的参数", route.query.id);
+let id = ref(route.query.id);
+const goBack = () => history.back();
+const deleteClick = () => {
+  Dialog.confirm({
+    title: "删除账单",
+    message: "确认删除此账单？",
+  })
+    .then(() => {
+      LedgerService.delete(id.value?.toString() || "").then(() => {
+          Toast('删除成功')
+        router.push("/books");
       });
-    };
-
-    return {
-      goBack,
-      deleteClick,
-      updateClick,
-      onCancel,
-      router,
-      list
-    };
-  },
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+//获取详情
+let leader: ILedger = reactive({});
+if (id.value) {
+  LedgerService.getDetials(id.value?.toString() || "").then(
+    (rep: ILedger) => {
+      Object.assign(leader, rep);
+    }
+  );
+}
+//账本共享用户列表
+let list: ILedger[] = reactive([]);
+LedgerService.getList(id.value?.toString() || "").then((rep) => {
+  list.push(...rep);
 });
+//取消分享账本
+const delClick = (ledgerId) => {
+  Dialog.confirm({
+    message: "取消共享账本吗？",
+  })
+    .then(() => {
+      LedgerService.cancel(
+        leader.id?.toString() || "",
+        ledgerId?.toString() || ""
+      ).then(() => {
+       Toast("取消成功");
+      router.push("/books");
+      });
+    })
+    .catch(() => {
+      // on cancel
+    });
+};
+const updateClick = () => {
+  router.push({
+    path: "/books/edit",
+    query: {
+      id: id.value,
+     },
+   });
+  };
 </script>
 
 <style scoped lang="scss">
@@ -130,7 +113,7 @@ export default defineComponent({
     padding: 16px;
   }
   p {
-    padding: 16px;
+    padding: 16px 8px;
   }
   .b-s-avatar{
     display: flex;
@@ -142,6 +125,15 @@ export default defineComponent({
       height: 33px;
       border-radius: 50%;
       object-fit: cover;
+    }
+  }
+  .b-s-btn{
+    display:block;
+    width:100%;
+    text-align:right;
+    img{
+      width:16px;
+      height:16px
     }
   }
 }
