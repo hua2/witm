@@ -14,30 +14,26 @@
       </template>
       <template #nav-right>
         <div class="icon">
-          <van-icon
-            name="plus"
-            size="18"
-            @click="router.push('/operation/list')"
-          />
+          <van-icon name="plus" size="18" @click="router.push('/operation/list')" />
         </div>
       </template>
       <van-tab title="支出">
         <van-row class="operation-top">
-          <van-col span="4" v-for="o in list" :key="'O' + o.name">
-            <span v-html="o.icon" />
-            <p>{{ o.name }}z</p>
+          <van-col span="4" v-for="(o, index) in list" :key="'O' + o.name">
+            <span v-html="o.icon" @click="iconClick(index, o.id)" />
+            <p :class="{ active: isActive === index }">{{ o.name }}</p>
           </van-col>
         </van-row>
-        <Counter />
+        <Counter :classifyId="classifyId" :type="type"/>
       </van-tab>
       <van-tab title="收入">
         <van-row class="operation-top">
-          <van-col span="4" v-for="i in list" :key="'I' + i.name">
-            <span v-html="i.icon" />
-            <p>{{ i.name }}s</p>
+          <van-col span="4" v-for="(i, index) in list" :key="'I' + i.name">
+            <span v-html="i.icon" @click="iconClick(index, i.id)" />
+            <p :class="{ active: isActive === index }">{{ i.name }}</p>
           </van-col>
         </van-row>
-        <Counter />
+        <Counter  :classifyId="classifyId" :type="type"/>
       </van-tab>
     </van-tabs>
   </div>
@@ -63,18 +59,26 @@ const getList = () => {
     type: type.value.toString() || "",
   }).then((rep) => {
     list.push(...rep);
-    console.log("list", list);
   });
 };
 const onClickTab = (v: any) => {
-  list.splice(0)
+  list.splice(0);
   if (v.name === 0) {
     type.value = "OUTLAY";
   } else {
     type.value = "INCOME";
   }
-    getList();
+  getList();
 };
+
+//选择图标
+const isActive = ref();
+const classifyId = ref('')
+const iconClick = (i, id) => {
+  classifyId.value = id
+  isActive.value = i;
+};
+
 </script>
 
 <style scoped lang="scss">
@@ -102,6 +106,9 @@ const onClickTab = (v: any) => {
         font-size: 12px;
         text-align: center;
         margin-top: 4px;
+      }
+      .active {
+        color: #519af8;
       }
       svg {
         width: 50%;

@@ -4,7 +4,7 @@
       title="加入他人账本"
       left-arrow
       fixed
-      placeholder="true"
+      :placeholder="true"
       @click-left="onClickLeft"
     >
     </van-nav-bar>
@@ -18,7 +18,13 @@
         input-align="right"
       />
       <div class="b-ntn">
-        <van-button block type="primary" native-type="submit" :loading="isLoading" @click="onSubmit">
+        <van-button
+          block
+          type="primary"
+          native-type="submit"
+          :loading="isLoading"
+          @click="onSubmit"
+        >
           保存
         </van-button>
         <p @click="show = true">如何获得邀请码?</p>
@@ -46,19 +52,22 @@ import LedgerService from "@/services/ledger-service";
 import { Toast } from "vant";
 import router from "@/router";
 
-const isLoading =ref<boolean>(false)
+const isLoading = ref<boolean>(false);
 const onClickLeft = () => history.back();
 const value = ref<number>(0);
 const show = ref<boolean>(false);
 const onSubmit = () => {
-  isLoading.value = true
-  LedgerService.share(value.value).then(() => {
-  isLoading.value = false
-  Toast("邀请已发送，请等待...");
-  setTimeout(() => {
-    router.push("/books");
-   }, 1000);
- });
+  isLoading.value = true;
+  LedgerService.share(value.value)
+    .then(() => {
+      Toast("邀请已发送，请等待...");
+      setTimeout(() => {
+        router.push("/books");
+      }, 1000);
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
 };
 </script>
 

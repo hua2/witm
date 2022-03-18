@@ -21,7 +21,7 @@
           name="password"
           label="密码"
           placeholder="请填写密码"
-          :rules="[{ required: true}]"
+          :rules="[{ required: true }]"
         />
       </van-cell-group>
       <div style="margin: 24px">
@@ -42,26 +42,29 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useUserStore } from '@/store/index'
+import { useUserStore } from "@/store/index";
 import AuthService from "@/services/auth-service";
 import { ILogin } from "@/types/auth";
 
 const isLoading = ref<boolean>(false);
 const router = useRouter();
-const userStore = useUserStore()
+const userStore = useUserStore();
 const account = ref("");
 const password = ref("");
 
 const onSubmit = (values: ILogin) => {
-    isLoading.value = true;
-    AuthService.authenticate(values).then((rep) => {
-      isLoading.value = false;
+  isLoading.value = true;
+  AuthService.authenticate(values)
+    .then((rep) => {
       const { id_token } = rep;
       if (id_token) {
         sessionStorage.setItem("token", id_token);
         userStore.getUserInfo();
         router.push("/home");
       }
+    })
+    .finally(() => {
+      isLoading.value = false;
     });
 };
 </script>

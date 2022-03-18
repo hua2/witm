@@ -1,16 +1,21 @@
-#app{
+#app {
   background: #fff;
 }
-.header{
-  .van-cell--clickable:active{
-    background-color:#fff;
+.header {
+  .van-cell--clickable:active {
+    background-color: #fff;
   }
 }
-.overview,.books,.books-setting,.books-update,.books-join,.classify{
-  .van-nav-bar .van-icon{
+.overview,
+.books,
+.books-setting,
+.books-update,
+.books-join,
+.classify {
+  .van-nav-bar .van-icon {
     color: #000;
   }
 }
-.content{
+.content {
   margin: 12px;
 }

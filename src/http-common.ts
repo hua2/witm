@@ -3,7 +3,6 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 const getToken = () => {
   return sessionStorage.getItem("token") || "";
   // return store.state.token
-
 };
 const ApiClient: AxiosInstance = axios.create({
   baseURL: "/",
@@ -13,27 +12,27 @@ const ApiClient: AxiosInstance = axios.create({
 });
 
 ApiClient.interceptors.request.use(
-    (config: AxiosRequestConfig) => {
-      const token = getToken();
-      if (token) {
-        config.headers = {
-          ...config.headers,
-          Authorization: `Bearer ${token}`,
-        };
-      }
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
+  (config: AxiosRequestConfig) => {
+    const token = getToken();
+    if (token) {
+      config.headers = {
+        ...config.headers,
+        Authorization: `Bearer ${token}`,
+      };
     }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 ApiClient.interceptors.response.use(
-    (response: AxiosResponse) => {
-      return response.data;
-    },
-    // 请求失败
-    (error) => {
-      return Promise.reject(error);
-    }
+  (response: AxiosResponse) => {
+    return response.data;
+  },
+  // 请求失败
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 export default ApiClient;

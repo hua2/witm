@@ -1,26 +1,31 @@
 <template>
   <div class="home">
     <!-- 首页header -->
-     <div class="home-header">
-    <van-icon name="wap-nav" size="24"/>
-    <div>
-      <van-cell :value=date?date:currentDate @click="showCalendar = true" is-link arrow-direction="down" />
-      <van-popup v-model:show="showCalendar" round
-                 position="bottom"
-                 :style="{ height: '38%' }">
-        <van-datetime-picker
+    <div class="home-header">
+      <van-icon name="wap-nav" size="24" />
+      <div>
+        <van-cell
+          :value="date ? date : currentDate"
+          @click="showCalendar = true"
+          is-link
+          arrow-direction="down"
+        />
+        <van-popup v-model:show="showCalendar" round position="bottom" :style="{ height: '38%' }">
+          <van-datetime-picker
             v-model="currentDate"
             type="year-month"
             title="选择年月"
-            :min-date="minDate"
-            :max-date="maxDate"
+            :min-date="new Date(2020, 0, 1)"
+            :max-date="new Date(2025, 10, 1)"
             @cancel="showCalendar = false"
             @confirm="onConfirm"
-        />
-      </van-popup>
+          />
+        </van-popup>
+      </div>
+      <router-link to="/total">
+        <img :src="require('@/assets/img/overview.png')" width="22" />
+      </router-link>
     </div>
-  <router-link to="/total"><img :src="require('@/assets/img/overview.png')" width="22"/></router-link>
-  </div>
     <div class="content">
       <div class="home-total">
         <div class="h-t-top">
@@ -30,72 +35,86 @@
           </div>
           <van-button size="mini" @click="router.push('/books')" round>默认账本</van-button>
         </div>
-        <div class="">
-          月收入: 0.00 月支出: 0.00
-        </div>
+        <div class>月收入: 0.00 月支出: 0.00</div>
       </div>
-      <list-item/>
-      <list-item/>
+      <list-item />
+      <list-item />
     </div>
-    <Footer/>
+    <Footer />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import ListItem from '@/components/ListItem.vue';
-import { useRouter } from 'vue-router';
-import Footer from '@/components/Footer.vue'
-// import BillService from "@/services/bill-service";
+import { ref, reactive, onMounted } from "vue";
+import ListItem from "@/components/ListItem.vue";
+import { useRouter } from "vue-router";
+import Footer from "@/components/Footer.vue";
+import BillService from "@/services/bill-service";
+import { IBill, IListParams } from "@/types/bill";
 
+const router = useRouter();
 
 //显示当前时间
 const showCalendar = ref(false);
 const time = ref(new Date());
-const currentDate = `${time.value.getFullYear()}-${time.value.getMonth() + 1}`;
-const date = ref<string>('');
-const onConfirm = (value:any) => {
-const formatDate = (date: Date) => `${date.getFullYear()}-${date.getMonth() + 1}`;
+const currentDate = `${time.value.getFullYear()}-${time.value.getMonth() < 9 ? "0" + (time.value.getMonth() + 1) : time.value.getMonth() + 1
+  }-${time.value.getDate() <= 9 ? "0" + time.value.getDate() : time.value.getDate()}`;
+const date = ref<string>("");
+const onConfirm = (value: any) => {
+  const formatDate = (date: Date) =>
+    `${date.getFullYear()}-${date.getMonth() < 9 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1}-${date.getDate() <= 9 ? "0" + date.getDate() : date.getDate()}`;
   showCalendar.value = false;
   date.value = formatDate(value);
+  list.splice(0);
+  getList();
 };
 
+onMounted(() => {
+  getList();
+});
 
-const router = useRouter();
-
-// BillService.billList().then()
+let list: IBill[] = reactive([]);
+let isParams: IListParams = {
+  date: date.value ? date.value : currentDate,
+  type: 'INCOME',
+}
+const getList = () => {
+  BillService.list(isParams).then((rep) => {
+    list.push(...rep);
+  });
+}
 
 </script>
 
-<style scoped lang="scss" >
-.home{
+<style scoped lang="scss">
+.home {
   width: 100%;
-  .home-header{
-  width: calc(100% - 32px);
-  height: 48px;
-  padding: 0 16px;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-  .home-total{
+  .home-header {
+    width: calc(100% - 32px);
+    height: 48px;
+    padding: 0 16px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .home-total {
     padding: 12px;
     height: 108px;
     color: #fff;
     font-size: 16px;
     background-image: url("https://img.yzcdn.cn/vant/cat.jpeg");
     background-size: 100% 100%;
-    border-radius:8px;
-    .h-t-top{
+    border-radius: 8px;
+    .h-t-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 54px;
-      p{
+      p {
         margin-top: 6px;
       }
-      .van-button--round{
+      .van-button--round {
         background: transparent;
         color: #fff;
       }
