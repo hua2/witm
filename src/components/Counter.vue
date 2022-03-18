@@ -68,9 +68,10 @@
 </template>
 <script setup lang="ts">
 import { Toast } from "vant";
-import { ref, defineProps } from "vue";
-import { useRouter } from "vue-router";
+import { ref, reactive, defineProps } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import BillService from "../services/bill-service";
+import { RBill } from "../types/bill";
 const props = defineProps({
   classifyId: {
     type: String,
@@ -82,6 +83,8 @@ const props = defineProps({
   }
 });
 const router = useRouter();
+const route = useRoute();
+let id = ref(route.query.id);
 //日期选择
 const showDate = ref(false);
 const time = ref(new Date());
@@ -95,6 +98,17 @@ const onConfirm = (value: any) => {
   showDate.value = false;
   date.value = formatDate(value);
 };
+
+//获取详情
+let details: RBill = reactive({});
+if (id.value) {
+  BillService.getDetials(id.value?.toString() || "").then((rep: RBill) => {
+    Object.assign(details, rep);
+    date.value = details.useDate || '',
+      remark.value = details.remark || '',
+      money.value = details.money || ''
+  });
+}
 
 //计算器
 const remark = ref<string>('');
@@ -164,16 +178,22 @@ const getResult = (e: any) => {
         return
       }
       setTimeout(() => {
-        BillService.add({
+        let method = BillService.add;
+        if (id.value) {
+          method = BillService.update;
+        }
+        method({
+          ...details,
           money: money.value,
-          type: props.type,
           remark: remark.value,
           useDate: date.value ? date.value : currentDate,
+          type: props.type,
           classifyId: props.classifyId
-        }).then(() => {
-          Toast('记录成功！')
-          router.push("/home");
         })
+          .then(() => {
+            Toast(id.value ? "修改成功" : "记录成功！");
+            router.push("/home");
+          })
       }, 1000)
       break;
     default:

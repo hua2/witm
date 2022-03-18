@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import http from "@/http-common";
-import { IBill } from "@/types/bill";
+import { IBill, RBill } from "@/types/bill";
 class BillService {
-  list(params:any): Promise<IBill[]> {
+  list(params:any): Promise<RBill[]> {
     return http.get("api/v1/money/users/bills",  { params: params });
   }
   add(data: IBill): Promise<IBill> {
@@ -14,7 +14,7 @@ class BillService {
   delete(data: string): Promise<void> {
     return http.delete("api/v1/money/users/bills/" + data);
   }
-  getDetials(data: string): Promise<IBill> {
+  getDetials(data: string): Promise<RBill> {
     return http.get("api/v1/money/users/bills/" + data);
   }
 }

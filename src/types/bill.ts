@@ -3,17 +3,34 @@ export interface IBill {
   operator?: string;
   createTime?: string;
   updateTime?: null;
-  money?: number;
-  remark?: number;
+  money?: string;
+  remark?: string;
   useDate?: string;
-  classifyId?: number;
-  ledgerId?: number;
-  userId?: number;
+  classifyId?:string;
+  ledgerId?: string;
+  userId?: string;
   showMoney?: string;
   classifyName?: string;
+  type?: string;
 }
 export interface IListParams {
   date?: string;
   ledgerId?: string;
   type?: string;
+}
+
+export interface RBill {
+  classifyId?: string;
+  classifyName?: string;
+  createTime?: string;
+  id?: string;
+  ledgerId?: string;
+  money?: string;
+  operator?: string;
+  remark?: string;
+  showMoney?: string;
+  type?: string;
+  updateTime?: null;
+  useDate?: string;
+  userId?: string;
 }

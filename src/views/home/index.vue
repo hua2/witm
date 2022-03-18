@@ -38,19 +38,17 @@
         <div class>月收入: 0.00 月支出: 0.00</div>
       </div>
       <list-item />
-      <list-item />
     </div>
     <Footer />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { ref } from "vue";
 import ListItem from "@/components/ListItem.vue";
 import { useRouter } from "vue-router";
 import Footer from "@/components/Footer.vue";
-import BillService from "@/services/bill-service";
-import { IBill, IListParams } from "@/types/bill";
+
 
 const router = useRouter();
 
@@ -58,31 +56,16 @@ const router = useRouter();
 const showCalendar = ref(false);
 const time = ref(new Date());
 const currentDate = `${time.value.getFullYear()}-${time.value.getMonth() < 9 ? "0" + (time.value.getMonth() + 1) : time.value.getMonth() + 1
-  }-${time.value.getDate() <= 9 ? "0" + time.value.getDate() : time.value.getDate()}`;
+  }`;
 const date = ref<string>("");
 const onConfirm = (value: any) => {
   const formatDate = (date: Date) =>
     `${date.getFullYear()}-${date.getMonth() < 9 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1}-${date.getDate() <= 9 ? "0" + date.getDate() : date.getDate()}`;
   showCalendar.value = false;
   date.value = formatDate(value);
-  list.splice(0);
-  getList();
 };
 
-onMounted(() => {
-  getList();
-});
 
-let list: IBill[] = reactive([]);
-let isParams: IListParams = {
-  date: date.value ? date.value : currentDate,
-  type: 'INCOME',
-}
-const getList = () => {
-  BillService.list(isParams).then((rep) => {
-    list.push(...rep);
-  });
-}
 
 </script>
 

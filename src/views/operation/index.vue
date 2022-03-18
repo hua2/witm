@@ -24,7 +24,7 @@
             <p :class="{ active: isActive === index }">{{ o.name }}</p>
           </van-col>
         </van-row>
-        <Counter :classifyId="classifyId" :type="type"/>
+        <Counter :classifyId="classifyId" :type="type" />
       </van-tab>
       <van-tab title="收入">
         <van-row class="operation-top">
@@ -33,7 +33,7 @@
             <p :class="{ active: isActive === index }">{{ i.name }}</p>
           </van-col>
         </van-row>
-        <Counter  :classifyId="classifyId" :type="type"/>
+        <Counter :classifyId="classifyId" :type="type" />
       </van-tab>
     </van-tabs>
   </div>
@@ -44,9 +44,12 @@ import Counter from "@/components/Counter.vue";
 import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import ClassifyService from "@/services/classify-service";
+
 import { IClassify } from "@/types/classify";
 
+
 const router = useRouter();
+
 const active = ref(0);
 const type = ref("OUTLAY");
 onMounted(() => {
